@@ -8,18 +8,21 @@ this.widget.add(ctx);
 const nameAddress = this.config.nameAddress;
 const tagLength = this.config.tagLength || 32;
 const colorText = this.config.colorText || 'black';
-const font = this.config.font || 'bold 14px Arial';
+const font = this.config.font || '16px Calibri';
 const rectangleColor = this.config.rectangleColor || '#c2f3fc';
 const rectangleWidth = this.config.rectangleWidth || 200;
-const rectangleHeight = this.config.rectangleHeight || 45;
+const rectangleHeight = this.config.rectangleHeight || 50;
 const rectangleStartX = this.config.rectangleStartX || 5;
 const rectangleStartY = this.config.rectangleStartY || 5;
 const textHeight = this.config.textHeight || 16;
-const maxLineBreakLength = this.config.maxLineBreakLength || 22;
+const maxLineBreakLength = this.config.maxLineBreakLength || 16;
+const enableDrawRectangle = this.config.enableDrawRectangle;
 const DEFAULT_TEXT = 'Endereço da tag não informado.';
 
 if (!nameAddress) {
-    drawRectangle(rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight, rectangleColor);
+    if (enableDrawRectangle) {
+        drawRectangle(rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight, rectangleColor);
+    }
     drawText(formatTextWithLineBreaks(DEFAULT_TEXT, maxLineBreakLength), textHeight, rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight);
     return;
 }
@@ -30,17 +33,13 @@ async function getDataValuesFromCLP(tagAddress, tagLength) {
     return data.values;
 }
 
-// Lista de valores ASCII
-const asciiValues = [
-    84, 117, 114, 98, 105, 110, 97, 32, 80, 114, 233, 45, 67, 104,
-    105, 108, 108, 101, 114, 32, 80, 111, 114, 116, 97, 32, 66, 49,
-    57];
-
-// const dataValues = await getDataValuesFromCLP(nameAddress, tagLength);
+const dataValues = await getDataValuesFromCLP(nameAddress, tagLength);
 
 // Converte a lista de valores ASCII em texto formatado
-convertToUtf8(asciiValues).then(text => {
-    drawRectangle(rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight, rectangleColor);
+convertToUtf8(dataValues).then(text => {
+    if (enableDrawRectangle) {
+        drawRectangle(rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight, rectangleColor);
+    }
     drawText(text, textHeight, rectangleStartX, rectangleStartY, rectangleWidth, rectangleHeight);
 });
 

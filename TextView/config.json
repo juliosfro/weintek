@@ -1,0 +1,10 @@
+{
+    "nameAddress": "Address|AAABBgBDTFBfMDHCEgBNXzlfMS5OT01FLkRBVEFbMF0ADABTdHJpbmdPdXRwdXQAAAIBAA==",
+    "enableDrawRectangle": true,
+    "rectangleColor": "#c2f3fc",
+    "rectangleWidth": 200,
+    "rectangleHeight": 50,
+    "font": "16px Calibri",
+    "maxLineBreakLength": 16,
+    "tagLength": 32
+}
