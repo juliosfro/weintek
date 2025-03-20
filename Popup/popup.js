@@ -13,6 +13,10 @@ const motorAtualClickIHMAdress = this.config.MotorAtualClickIHM;
 // Quando o valor desse bit eh setado para 1 entao o popup eh mostrado
 const showPopupIHMAddress = this.config.ShowPopupIHM;
 
+// Status de ligado
+const statusLigadoCLPAddress = this.config.StatusLigadoCLP;
+const statusLigadoIHMAddress = this.config.StatusLigadoIHM;
+
 // Tag 
 const tagEquipamentoCLPAddress = this.config.TagEquipamentoCLP;
 const tagEquipamentoIHMAddress = this.config.TagEquipamentoIHM;
@@ -26,30 +30,33 @@ const correnteCLPAddress = this.config.CorrenteCLP;
 const correnteIHMAddress = this.config.CorrenteIHM;
 
 // Frequencia em Hz
+const notificaAlteracaoSPIHMAddress = this.config.NotificaAlteracaoSP;
 const frequenciaCLPAdress = this.config.SetPointCLP;
 const frequenciaIHMAddress = this.config.FrequenciaIHM;
-const SetPointIHMAddress = this.config.SetPointIHM;
+const setPointIHMAddress = this.config.SetPointIHM;
 const changeFrequencySubscriptionIHMAddress = this.config.SetpointFrequenciaSubscriptionIHM;
 
+// Busca no CLP o nome da tag do equipamento
+const dataValues = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
+const tagEquipamentoRecebida = await convertToUtf8(dataValues);
+driver.setStringData(tagEquipamentoIHMAddress, 32, tagEquipamentoRecebida);
+
 async function updateFrequency() {
-    const frequency = await driver.promises.getData(SetPointIHMAddress, 1);
-    driver.setData(frequenciaCLPAdress, frequency.values);
+    const estaAlterando = await driver.promises.getData(notificaAlteracaoSPIHMAddress, 1);
+    if (estaAlterando.values) {
+        console.log("Esta alterando... " + estaAlterando.values);
+        const frequency = await driver.promises.getData(setPointIHMAddress, 1);
+        driver.setData(frequenciaCLPAdress, frequency.values);
+    }
 }
 
 let isOn = false;
 
 async function getDataValuesFromCLP(tagAddress, tagLength) {
     const length = tagLength || 32;
-    const data = await driver.promises.getData(tagAddress, tagLength);
+    const data = await driver.promises.getData(tagAddress, length);
     return data.values;
 }
-
-const dataValues = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
-
-const tagEquipamentoRecebida = await convertToUtf8(dataValues);
-const velocidadeDoMotorRecebida = await driver.promises.getData(velocidadeAtualCLPAddress, 1);
-const frequenciaRecebida = await driver.promises.getData(frequenciaCLPAdress, 1);
-const correnteDoMotorRecebida = await driver.promises.getData(correnteCLPAddress, 1);
 
 function convertToValidBytes(data) {
     return data.map(value => (value < 0 ? value + 256 : value))
@@ -103,13 +110,21 @@ function drawButton() {
 let motorAtualClicado = "";
 let permiteAlterarFrequencia = false;
 
-async function param() {
+// Busca as informacoes no CLP e atualiza no popup
+async function updateInfoPopup() {
+    const dataValues = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
+    const tagEquipamentoRecebida = await convertToUtf8(dataValues);
+    const velocidadeDoMotorRecebida = await driver.promises.getData(velocidadeAtualCLPAddress, 1);
+    const frequenciaRecebida = await driver.promises.getData(frequenciaCLPAdress, 1);
+    const correnteDoMotorRecebida = await driver.promises.getData(correnteCLPAddress, 1);
+    const statusLigadoRecebido = await driver.promises.getData(statusLigadoCLPAddress, 1);
+
     driver.setStringData(tagEquipamentoIHMAddress, 32, tagEquipamentoRecebida);
-    driver.setData(SetPointIHMAddress, frequenciaRecebida.values);
+    driver.setData(setPointIHMAddress, frequenciaRecebida.values);
     driver.setData(velocidadeAtualIHMAddress, velocidadeDoMotorRecebida.values);
     driver.setData(frequenciaIHMAddress, frequenciaRecebida.values);
     driver.setData(correnteIHMAddress, correnteDoMotorRecebida.values);
-    driver.setData(showPopupIHMAddress, 1);
+    driver.setData(statusLigadoIHMAddress, statusLigadoRecebido.values);
 }
 
 async function verificaCircuito() {
@@ -132,24 +147,27 @@ async function verificaCircuito() {
 
 changeFrequencySubscriptionIHMAddress.onResponse((err, data) => {
     verificaCircuito().then(permiteAlterarFrequencia => {
-        if (permiteAlterarFrequencia) {
-            updateFrequency().then(() => {
-
-                setTimeout(() => {
-                    driver.getData(velocidadeAtualCLPAddress, 1, (error, data) => {
-                        driver.setData(velocidadeAtualIHMAddress, data.values);
-                    });
-
-                    driver.getData(frequenciaCLPAdress, 1, (error, data) => {
-                        driver.setData(frequenciaIHMAddress, data.values);
-                    });
-
-                    driver.getData(correnteCLPAddress, 1, (error, data) => {
-                        driver.setData(correnteIHMAddress, data.values);
-                    });
-                }, 2000); // 2 segundos
-            });
-        }
+        driver.getData(notificaAlteracaoSPIHMAddress, 1, (error, data) => {
+            if (permiteAlterarFrequencia && data.values) {
+                updateFrequency().then(() => {
+                    console.log("Frequencia alterada... 9.5 A");
+                    console.log("Notifica " + data.values);
+                    setTimeout(() => {
+                        driver.getData(velocidadeAtualCLPAddress, 1, (error, data) => {
+                            driver.setData(velocidadeAtualIHMAddress, data.values);
+                        });
+    
+                        driver.getData(frequenciaCLPAdress, 1, (error, data) => {
+                            driver.setData(frequenciaIHMAddress, data.values);
+                        });
+    
+                        driver.getData(correnteCLPAddress, 1, (error, data) => {
+                            driver.setData(correnteIHMAddress, data.values);
+                        });
+                    }, 2000); // 2 segundos
+                });
+            }
+        });
     });
 });
 
@@ -166,7 +184,10 @@ mouseArea.on('mousedown', (mouseEvent) => {
   if (mouseEvent.x >= x && mouseEvent.x <= x + buttonWidth && mouseEvent.y >= y && mouseEvent.y <= y + buttonHeight) {
     isOn = !isOn;
     driver.setStringData(motorAtualClickIHMAdress, 32, tagEquipamentoRecebida);
-    param();
-    drawButton(); // Redesenha o botao com o novo estado
+    updateInfoPopup().then(() => {
+        driver.setData(showPopupIHMAddress, 1);
+    //  setInterval(updateInfoPopup, 1000); // Atualiza as informacoes no popup a cada 1 segundo
+        drawButton(); // Redesenha o botao com o novo estado
+    });
   }
 });
