@@ -117,11 +117,11 @@ UAC password_1,Local HMI,PLW,8962,,Undesignated
 SETPOINT,Local HMI,LW,10,,32-bit Float
 VELOCIDADE_ATUAL_RPM,Local HMI,LW,890,,32-bit Unsigned
 FREQUENCIA,Local HMI,LW,580,,32-bit Float
-LIGADO,Local HMI,LB,10,,Undesignated
+STATUS_LIGADO,Local HMI,LB,10,,Undesignated
 DESLIGADO,Local HMI,LB,11,,Undesignated
 LIGAR,Local HMI,LB,12,,Undesignated
 DESLIGAR,Local HMI,LB,13,,Undesignated
-EM_FALHA,Local HMI,LB,14,,Undesignated
+STATUS_FALHA,Local HMI,LB,14,,Undesignated
 RESET,Local HMI,LB,15,,Undesignated
 MANUAL,Local HMI,LB,16,,Undesignated
 AUTOMATICO,Local HMI,LB,17,,Undesignated
@@ -137,3 +137,6 @@ TAG,Local HMI,LW,200,,Undesignated
 SHOW_POPUP,Local HMI,LB,250,,Undesignated
 MOTOR_ATUAL_POPUP_ABERTO,Local HMI,LW,350,,Undesignated
 CORRENTE,Local HMI,LW,900,,Undesignated
+FREQUENCIA_MOTOR_01,Local HMI,LW,650,,32-bit Float
+FREQUENCIA_MOTOR_02,Local HMI,LW,700,,32-bit Float
+NOTIFICA_MUDANCA_SP,Local HMI,LB,950,,Undesignated
