@@ -174,20 +174,48 @@ changeFrequencySubscriptionIHMAddress.onResponse((err, data) => {
 // Desenha o botao inicialmente
 drawButton();
 
+let updateInterval;
+
+// Flag para evitar chamadas sobrepostas
+let isUpdating = false; 
+
+function closePopup() {
+    driver.setData(showPopupIHMAddress, 0);
+
+    if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+    }
+}
+
 // Detecta o clique do mouse na area do botao
 mouseArea.on('mousedown', (mouseEvent) => {
-  const buttonWidth = 100;
-  const buttonHeight = 80;
-  const x = 10;
-  const y = 10;
-  
-  if (mouseEvent.x >= x && mouseEvent.x <= x + buttonWidth && mouseEvent.y >= y && mouseEvent.y <= y + buttonHeight) {
-    isOn = !isOn;
-    driver.setStringData(motorAtualClickIHMAdress, 32, tagEquipamentoRecebida);
-    updateInfoPopup().then(() => {
-        driver.setData(showPopupIHMAddress, 1);
-    //  setInterval(updateInfoPopup, 1000); // Atualiza as informacoes no popup a cada 1 segundo
-        drawButton(); // Redesenha o botao com o novo estado
-    });
-  }
+    const buttonWidth = 100;
+    const buttonHeight = 80;
+    const x = 10;
+    const y = 10;
+
+    if (mouseEvent.x >= x && mouseEvent.x <= x + buttonWidth && mouseEvent.y >= y && mouseEvent.y <= y + buttonHeight) {
+        isOn = !isOn;
+        driver.setStringData(motorAtualClickIHMAdress, 32, tagEquipamentoRecebida);
+
+        updateInfoPopup().then(() => {
+            driver.setData(showPopupIHMAddress, 1);
+
+            // Se ja existir um intervalo ativo, evitamos criar outro
+            if (!updateInterval) {
+                updateInterval = setInterval(() => {
+                    if (!isUpdating) {
+                        isUpdating = true;
+                        updateInfoPopup().finally(() => {
+                            isUpdating = false;
+                        });
+                    }
+                }, 1000);
+            }
+
+            // Redesenha o botao com o novo estado
+            drawButton();
+        });
+    }
 });
