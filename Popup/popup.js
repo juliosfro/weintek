@@ -1,8 +1,7 @@
 const encoding = require('/encoding.js');
-const convert = require('/script-convert-ascii-utf8.js');
 
-let canvas = new Canvas();
-let mouseArea = new MouseArea();
+const canvas = new Canvas();
+const mouseArea = new MouseArea();
 
 this.widget.add(canvas);
 this.widget.add(mouseArea);
@@ -30,8 +29,8 @@ const tagEquipamentoCLPAddress = this.config.clp.TagEquipamentoCLP;
 const tagEquipamentoIHMAddress = this.config.ihm.TagEquipamentoIHM;
 
 // Nome
-const nomeEquipamentoIHMAddress = this.config.ihm.NomeEquipamentoIHM;
 const nomeEquipamentoCLPAddress = this.config.clp.NomeEquipamentoCLP;
+const nomeEquipamentoIHMAddress = this.config.ihm.NomeEquipamentoIHM;
 
 // Velocidade do motor
 const velocidadeAtualCLPAddress = this.config.clp.VelocidadeAtualCLP;
@@ -42,10 +41,10 @@ const correnteCLPAddress = this.config.clp.CorrenteCLP;
 const correnteIHMAddress = this.config.ihm.CorrenteIHM;
 
 // Frequencia em Hz
-const notificaAlteracaoSPIHMAddress = this.config.ihm.NotificaAlteracaoSPIHM;
 const frequenciaCLPAdress = this.config.clp.SetPointCLP;
-const frequenciaIHMAddress = this.config.ihm.FrequenciaIHM;
 const setPointIHMAddress = this.config.ihm.SetPointIHM;
+const frequenciaIHMAddress = this.config.ihm.FrequenciaIHM;
+const notificaAlteracaoSPIHMAddress = this.config.ihm.NotificaAlteracaoSPIHM;
 const changeFrequencySubscriptionIHMAddress = this.config.ihm.SetpointFrequenciaSubscriptionIHM;
 
 // Busca no CLP o nome da tag do equipamento
@@ -98,9 +97,6 @@ function formatTextWithLineBreaks(text, maxLength) {
 }
 
 function drawMouseArea() {
-    const x = mouseAreaStartX;
-    const y = mouseAreaStartY;
-
     // Cor de fundo transparente
     canvas.fillStyle = "rgba(0, 0, 0, 0)";  // Fundo transparente
     canvas.fillRect(mouseAreaStartX, mouseAreaStartY, mouseAreaWidth, mouseAreaHeight);
@@ -109,7 +105,7 @@ function drawMouseArea() {
     if (drawLineMouseArea) {
         canvas.lineWidth = 1;
         canvas.strokeStyle = "black";
-        canvas.strokeRect(x, y, mouseAreaWidth, mouseAreaHeight);
+        canvas.strokeRect(mouseAreaStartX, mouseAreaStartY, mouseAreaWidth, mouseAreaHeight);
     }
 }
 
