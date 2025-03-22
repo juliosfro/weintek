@@ -1,8 +1,8 @@
 const encoding = require('/encoding.js');
 
 // Inicializa o contexto do canvas
-const ctx = new Canvas();
-this.widget.add(ctx);
+const canvas = new Canvas();
+this.widget.add(canvas);
 
 // Configuracoes do componente
 const nameAddress = this.config.nameAddress;
@@ -69,21 +69,21 @@ function formatTextWithLineBreaks(text, maxLength) {
 }
 
 function drawRectangle(x, y, width, height, color) {
-    ctx.fillStyle = color;
-    ctx.fillRect(x, y, width, height);
+    canvas.fillStyle = color;
+    canvas.fillRect(x, y, width, height);
 }
 
-function drawText(text, textHeight, rectX, rectY, rectWidth, rectHeight) {
-    ctx.font = font;
-    ctx.fillStyle = colorText;
+function drawText(text, textHeight, recanvas, rectY, rectWidth, rectHeight) {
+    canvas.font = font;
+    canvas.fillStyle = colorText;
 
     const lines = text.split('\n');
     let textY = rectY + (rectHeight - (lines.length * textHeight)) / 2 + 10;
 
     for (let line of lines) {
-        const textWidth = ctx.measureText(line).width;
-        const textX = rectX + (rectWidth - textWidth) / 2;
-        ctx.fillText(line, textX, textY);
+        const textWidth = canvas.measureText(line).width;
+        const textX = recanvas + (rectWidth - textWidth) / 2;
+        canvas.fillText(line, textX, textY);
         textY += textHeight;
     }
 }
