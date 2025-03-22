@@ -1,4 +1,5 @@
 const encoding = require('/encoding.js');
+const convert = require('/script-convert-ascii-utf8.js');
 
 let canvas = new Canvas();
 let mouseArea = new MouseArea();
@@ -8,38 +9,54 @@ this.widget.add(mouseArea);
 
 const maxLineBreakLength = 16;
 
-const motorAtualClickIHMAdress = this.config.MotorAtualClickIHM;
+// Configuracoes da area de click do mouse sob o componente
+const mouseAreaWidth = this.config.mouseArea.MouseAreaWidth;
+const mouseAreaHeight = this.config.mouseArea.MouseAreaHeight;
+const mouseAreaStartX = this.config.mouseArea.MouseAreaStartX;
+const mouseAreaStartY = this.config.mouseArea.MouseAreaStartY;
+const drawLineMouseArea = this.config.mouseArea.DrawLineMouseArea;
+
+const motorAtualClickIHMAdress = this.config.ihm.MotorAtualClickIHM;
 
 // Quando o valor desse bit eh setado para 1 entao o popup eh mostrado
-const showPopupIHMAddress = this.config.ShowPopupIHM;
+const showPopupIHMAddress = this.config.ihm.ShowPopupIHM;
 
 // Status de ligado
-const statusLigadoCLPAddress = this.config.StatusLigadoCLP;
-const statusLigadoIHMAddress = this.config.StatusLigadoIHM;
+const statusLigadoCLPAddress = this.config.clp.StatusLigadoCLP;
+const statusLigadoIHMAddress = this.config.ihm.StatusLigadoIHM;
 
 // Tag 
-const tagEquipamentoCLPAddress = this.config.TagEquipamentoCLP;
-const tagEquipamentoIHMAddress = this.config.TagEquipamentoIHM;
+const tagEquipamentoCLPAddress = this.config.clp.TagEquipamentoCLP;
+const tagEquipamentoIHMAddress = this.config.ihm.TagEquipamentoIHM;
+
+// Nome
+const nomeEquipamentoIHMAddress = this.config.ihm.NomeEquipamentoIHM;
+const nomeEquipamentoCLPAddress = this.config.clp.NomeEquipamentoCLP;
 
 // Velocidade do motor
-const velocidadeAtualCLPAddress = this.config.VelocidadeAtualCLP;
-const velocidadeAtualIHMAddress = this.config.VelocidadeAtualIHM;
+const velocidadeAtualCLPAddress = this.config.clp.VelocidadeAtualCLP;
+const velocidadeAtualIHMAddress = this.config.ihm.VelocidadeAtualIHM;
 
 // Corrente do motor
-const correnteCLPAddress = this.config.CorrenteCLP;
-const correnteIHMAddress = this.config.CorrenteIHM;
+const correnteCLPAddress = this.config.clp.CorrenteCLP;
+const correnteIHMAddress = this.config.ihm.CorrenteIHM;
 
 // Frequencia em Hz
-const notificaAlteracaoSPIHMAddress = this.config.NotificaAlteracaoSPIHM;
-const frequenciaCLPAdress = this.config.SetPointCLP;
-const frequenciaIHMAddress = this.config.FrequenciaIHM;
-const setPointIHMAddress = this.config.SetPointIHM;
-const changeFrequencySubscriptionIHMAddress = this.config.SetpointFrequenciaSubscriptionIHM;
+const notificaAlteracaoSPIHMAddress = this.config.ihm.NotificaAlteracaoSPIHM;
+const frequenciaCLPAdress = this.config.clp.SetPointCLP;
+const frequenciaIHMAddress = this.config.ihm.FrequenciaIHM;
+const setPointIHMAddress = this.config.ihm.SetPointIHM;
+const changeFrequencySubscriptionIHMAddress = this.config.ihm.SetpointFrequenciaSubscriptionIHM;
 
 // Busca no CLP o nome da tag do equipamento
-const dataValues = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
-const tagEquipamentoRecebida = await convertToUtf8(dataValues);
+const dataValuesTagEquipamento = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
+const tagEquipamentoRecebida = await convertToUtf8(dataValuesTagEquipamento);
 driver.setStringData(tagEquipamentoIHMAddress, 32, tagEquipamentoRecebida);
+
+// Busca no CLP o nome (descricao) do equipamento e seta na variavel local da IHM
+const dataValuesNomeEquipamento = await getDataValuesFromCLP(nomeEquipamentoCLPAddress, 32);
+const nomeEquipamentoRecebido = await convertToUtf8(dataValuesNomeEquipamento);
+driver.setStringData(nomeEquipamentoIHMAddress, 32, nomeEquipamentoRecebido);
 
 async function updateFrequency() {
     const estaAlterandoSetPoint = await driver.promises.getData(notificaAlteracaoSPIHMAddress, 1);
@@ -48,8 +65,6 @@ async function updateFrequency() {
         driver.setData(frequenciaCLPAdress, frequency.values);
     }
 }
-
-let isOn = false;
 
 async function getDataValuesFromCLP(tagAddress, tagLength) {
     const length = tagLength || 32;
@@ -82,47 +97,38 @@ function formatTextWithLineBreaks(text, maxLength) {
     return formattedText.trimEnd();
 }
 
-function drawButton() {
-    const buttonWidth = 100;
-    const buttonHeight = 80;
-    const x = 10;
-    const y = 10;
-
-    const grd = canvas.createLinearGradient(x, y, x + buttonWidth, y);
-    // A cor de fundo ainda pode ser controlada aqui se necessário
-    grd.addColorStop(0, isOn ? "#FFFFFF" : "#FFFFFF");
-    grd.addColorStop(1, isOn ? "#FFFFFF" : "#FFFFFF");
+function drawMouseArea() {
+    const x = mouseAreaStartX;
+    const y = mouseAreaStartY;
 
     // Cor de fundo transparente
     canvas.fillStyle = "rgba(0, 0, 0, 0)";  // Fundo transparente
-    canvas.fillRect(x, y, buttonWidth, buttonHeight);
+    canvas.fillRect(mouseAreaStartX, mouseAreaStartY, mouseAreaWidth, mouseAreaHeight);
 
     // Borda visivel
-    canvas.lineWidth = 1;
-    canvas.strokeStyle = "rgba(0, 0, 0, 0)";  // Borda transparente
-    canvas.strokeRect(x, y, buttonWidth, buttonHeight);
-
-    // canvas.font = "20px Arial";
-    // canvas.fillStyle = "#fff";  // Cor do texto branco
-    // canvas.textAlign = "center";
-    // canvas.textBaseline = "middle";
-    // canvas.fillText(isOn ? "Ligado" : "Desligado", x + buttonWidth / 2, y + buttonHeight / 2);
+    if (drawLineMouseArea) {
+        canvas.lineWidth = 1;
+        canvas.strokeStyle = "black";
+        canvas.strokeRect(x, y, mouseAreaWidth, mouseAreaHeight);
+    }
 }
-
 
 let motorAtualClicado = "";
 let permiteAlterarFrequencia = false;
 
 // Busca as informacoes no CLP e atualiza no popup
 async function updateInfoPopup() {
-    const dataValues = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
-    const tagEquipamentoRecebida = await convertToUtf8(dataValues);
+    const dataValuesTagEquipamento = await getDataValuesFromCLP(tagEquipamentoCLPAddress, 32);
+    const tagEquipamentoRecebida = await convertToUtf8(dataValuesTagEquipamento);
+    const dataValuesNomeEquipamento = await getDataValuesFromCLP(nomeEquipamentoCLPAddress, 32);
+    const nomeEquipamentoRecebido = await convertToUtf8(dataValuesNomeEquipamento);
     const velocidadeDoMotorRecebida = await driver.promises.getData(velocidadeAtualCLPAddress, 1);
     const frequenciaRecebida = await driver.promises.getData(frequenciaCLPAdress, 1);
     const correnteDoMotorRecebida = await driver.promises.getData(correnteCLPAddress, 1);
     const statusLigadoRecebido = await driver.promises.getData(statusLigadoCLPAddress, 1);
 
     driver.setStringData(tagEquipamentoIHMAddress, 32, tagEquipamentoRecebida);
+    driver.setStringData(nomeEquipamentoIHMAddress, 32, nomeEquipamentoRecebido);
     driver.setData(velocidadeAtualIHMAddress, velocidadeDoMotorRecebida.values);
     driver.setData(frequenciaIHMAddress, frequenciaRecebida.values);
     driver.setData(correnteIHMAddress, correnteDoMotorRecebida.values);
@@ -181,10 +187,9 @@ changeFrequencySubscriptionIHMAddress.onResponse((err, data) => {
 });
 
 // Desenha o botao inicialmente
-drawButton();
+drawMouseArea();
 
-// Variavel para armazenar o ID do intervalo
-let popupInterval = null;  
+let popupInterval = null;  // Variavel para armazenar o ID do intervalo
 
 // Funcao para verificar se o popup esta aberto
 async function isPopupOpen() {
@@ -193,30 +198,28 @@ async function isPopupOpen() {
 }
 
 // Detecta o clique do mouse na area do botao
-mouseArea.on('mousedown', (mouseEvent) => {
-    const buttonWidth = 100;
-    const buttonHeight = 80;
-    const x = 10;
-    const y = 10;
+mouseArea.on('click', (mouseEvent) => {
+    const buttonWidth = mouseAreaWidth;
+    const buttonHeight = mouseAreaHeight;
+    const x = mouseAreaStartX;
+    const y = mouseAreaStartY;
 
     if (mouseEvent.x >= x && mouseEvent.x <= x + buttonWidth && mouseEvent.y >= y && mouseEvent.y <= y + buttonHeight) {
-        isOn = !isOn;
         driver.setStringData(motorAtualClickIHMAdress, 32, tagEquipamentoRecebida);
 
         // Verifica o status atual do popup
         isPopupOpen().then((isOPen) => {
 
             // Funcao para alterar o status do motor (shape picture), ligado, desligado, em falha, etc.
-            setMotorState(4);
-
+            setMotorState(1);
+            
             // Se o popup nao estiver aberto (assumindo que 0 significa fechado)
             if (isOPen[0] === 0) {
                 updateInfoPopup().then(() => {
                     // Abre o popup
                     driver.setData(showPopupIHMAddress, 1);
-
                     // Redesenha o botao com o novo estado
-                    drawButton();
+                    drawMouseArea();
 
                     // Inicia o intervalo para atualizar as informacoes a cada 1 segundo
                     popupInterval = setInterval(() => {
