@@ -10,4 +10,4 @@ const outputTagAddresses = [
     this.config.StrOutput,  
 ];
 
-convert.processMultipleInputs(inputTagAddresses, outputTagAddresses);
+await convert.processMultipleInputs(inputTagAddresses, outputTagAddresses);
