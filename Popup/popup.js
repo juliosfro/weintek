@@ -25,6 +25,16 @@ const showPopupIHMAddress = this.config.ihm.ShowPopupIHM;
 const statusLigadoCLPAddress = this.config.clp.StatusLigadoCLP;
 const statusLigadoIHMAddress = this.config.ihm.StatusLigadoIHM;
 
+// Status de falha
+const statusFalhaCLPAddress = this.config.clp.StatusFalhaCLP;
+const statusFalhaIHMAddress = this.config.ihm.StatusFalhaIHM;
+
+// Tag com o endereco de reset de falha
+const resetaFalhaCLPAddress = this.config.clp.ResetaFalhaCLP;
+
+// Detecta quando o botao de reset de falha for acionado na IHM
+const resetFalhaSubscriptionIHMAddress =  this.config.ihm.ResetFalhaSubscriptionIHM;
+
 // Tag 
 const tagEquipamentoCLPAddress = this.config.clp.TagEquipamentoCLP;
 const tagEquipamentoIHMAddress = this.config.ihm.TagEquipamentoIHM;
@@ -34,18 +44,18 @@ const nomeEquipamentoCLPAddress = this.config.clp.NomeEquipamentoCLP;
 const nomeEquipamentoIHMAddress = this.config.ihm.NomeEquipamentoIHM;
 
 // Velocidade do motor
-const velocidadeAtualCLPAddress = this.config.clp.VelocidadeAtualCLP;
-const velocidadeAtualIHMAddress = this.config.ihm.VelocidadeAtualIHM;
+const velocidadeCLPAddress = this.config.clp.VelocidadeRpmCLP;
+const velocidadeIHMAddress = this.config.ihm.VelocidadeRpmIHM;
 
 // Corrente do motor
 const correnteCLPAddress = this.config.clp.CorrenteCLP;
 const correnteIHMAddress = this.config.ihm.CorrenteIHM;
 
 // Frequencia em Hz
-const frequenciaCLPAdress = this.config.clp.SetPointCLP;
+const frequenciaCLPAdress = this.config.clp.FrequenciaCLP;
 const setPointIHMAddress = this.config.ihm.SetPointIHM;
 const frequenciaIHMAddress = this.config.ihm.FrequenciaIHM;
-const notificaAlteracaoSPIHMAddress = this.config.ihm.NotificaAlteracaoSPIHM;
+const keypadSetPointHabilitadoIHMAddress = this.config.ihm.KeypadSetPointHabilitadoIHM;
 const changeFrequencySubscriptionIHMAddress = this.config.ihm.SetpointFrequenciaSubscriptionIHM;
 
 // Busca no CLP o nome da tag do equipamento
@@ -61,6 +71,11 @@ driver.setStringData(nomeEquipamentoIHMAddress, tagWordLength, nomeEquipamentoRe
 async function updateFrequency() {
     const frequency = await driver.promises.getData(setPointIHMAddress, 1);
     driver.setData(frequenciaCLPAdress, frequency.values);
+}
+
+async function resetFault() {
+    console.log("Funcao de reset de falha chamada...");
+    driver.setData(resetaFalhaCLPAddress, 1);
 }
 
 async function readAsciiFromCLPAddress(tagAddress, tagLength) {
@@ -108,7 +123,7 @@ function drawMouseArea() {
 }
 
 let motorAtualClicado = "";
-let canChangeFrequency = false;
+let canChange = false;
 
 // Busca as informacoes no CLP e atualiza no popup
 async function updateInfoPopup() {
@@ -116,19 +131,21 @@ async function updateInfoPopup() {
     const tagEquipamentoRecebida = await convertToUtf8(dataValuesTagEquipamento);
     const dataValuesNomeEquipamento = await readAsciiFromCLPAddress(nomeEquipamentoCLPAddress, tagWordLength);
     const nomeEquipamentoRecebido = await convertToUtf8(dataValuesNomeEquipamento);
-    const velocidadeDoMotorRecebida = await driver.promises.getData(velocidadeAtualCLPAddress, 1);
+    const velocidadeDoMotorRecebida = await driver.promises.getData(velocidadeCLPAddress, 1);
     const frequenciaRecebida = await driver.promises.getData(frequenciaCLPAdress, 1);
     const correnteDoMotorRecebida = await driver.promises.getData(correnteCLPAddress, 1);
     const statusLigadoRecebido = await driver.promises.getData(statusLigadoCLPAddress, 1);
+    const statusFalhaRecebido = await driver.promises.getData(statusFalhaCLPAddress, 1);
 
     driver.setStringData(tagEquipamentoIHMAddress, tagWordLength, tagEquipamentoRecebida);
     driver.setStringData(nomeEquipamentoIHMAddress, tagWordLength, nomeEquipamentoRecebido);
-    driver.setData(velocidadeAtualIHMAddress, velocidadeDoMotorRecebida.values);
+    driver.setData(velocidadeIHMAddress, velocidadeDoMotorRecebida.values);
     driver.setData(frequenciaIHMAddress, frequenciaRecebida.values);
     driver.setData(correnteIHMAddress, correnteDoMotorRecebida.values);
     driver.setData(statusLigadoIHMAddress, statusLigadoRecebido.values);
+    driver.setData(statusFalhaIHMAddress, statusFalhaRecebido.values);
 
-    driver.getData(notificaAlteracaoSPIHMAddress, 1, (error, data) => {
+    driver.getData(keypadSetPointHabilitadoIHMAddress, 1, (error, data) => {
         // Se o valor do setpoint estiver sendo alterado entao nao deve ser atualizado com o valor do CLP
         if (data.values[0] === 0) {
             driver.setData(setPointIHMAddress, frequenciaRecebida.values);
@@ -150,32 +167,25 @@ async function checkCircuit() {
     const motorAtualClicadoCleanString = cleanString(motorAtualClicado);
     const tagEquipamentoRecebidaCleanString = cleanString(tagEquipamentoRecebida);
 
-    canChangeFrequency = motorAtualClicadoCleanString === tagEquipamentoRecebidaCleanString;
+    canChange = motorAtualClicadoCleanString === tagEquipamentoRecebidaCleanString;
 
-    return canChangeFrequency;
+    return canChange;
 }
+
+resetFalhaSubscriptionIHMAddress.onResponse((_err, data) => {
+  //  console.log("Reset de falha subscription");
+    checkCircuit().then(canChange => {
+        if (canChange && data?.values) {
+            resetFault();
+        }
+    });
+});
 
 changeFrequencySubscriptionIHMAddress.onResponse((_err, _data) => {
     checkCircuit().then(canChangeFrequency => {
-        driver.getData(notificaAlteracaoSPIHMAddress, 1, (_error, isNumpadSetPointEnabled) => {
+        driver.getData(keypadSetPointHabilitadoIHMAddress, 1, (_error, isNumpadSetPointEnabled) => {
             if (canChangeFrequency && isNumpadSetPointEnabled.values) {
-                updateFrequency().then(() => {
-                    // console.log("Frequencia alterada... 9.5 A");
-                    // console.log("Notifica " + data.values);
-                    setTimeout(() => {
-                        driver.getData(velocidadeAtualCLPAddress, 1, (_error, motorRotationRpm) => {
-                            driver.setData(velocidadeAtualIHMAddress, motorRotationRpm.values);
-                        });
-
-                        driver.getData(frequenciaCLPAdress, 1, (_error, frequency) => {
-                            driver.setData(frequenciaIHMAddress, frequency.values);
-                        });
-
-                        driver.getData(correnteCLPAddress, 1, (_error, motorCurrentAmps) => {
-                            driver.setData(correnteIHMAddress, motorCurrentAmps.values);
-                        });
-                    }, 2000); // 2 segundos
-                });
+                updateFrequency();
             }
         });
     });
