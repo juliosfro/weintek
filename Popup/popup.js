@@ -25,6 +25,14 @@ const showPopupIHMAddress = this.config.ihm.ShowPopupIHM;
 const statusLigadoCLPAddress = this.config.clp.StatusLigadoCLP;
 const statusLigadoIHMAddress = this.config.ihm.StatusLigadoIHM;
 
+// Ligar
+const ligarCLPAddress = this.config.clp.LigaCLP;
+const ligarSubscriptionIHMAddress = this.config.ihm.LigarSubscriptionIHM;
+
+// Desligar
+const desligarCLPAddress = this.config.clp.DesligaCLP;
+const desligarSubscriptionIHMAddress = this.config.ihm.DesligarSubscriptionIHM;
+
 // Status de falha
 const statusFalhaCLPAddress = this.config.clp.StatusFalhaCLP;
 const statusFalhaIHMAddress = this.config.ihm.StatusFalhaIHM;
@@ -73,9 +81,19 @@ async function updateFrequency() {
     driver.setData(frequenciaCLPAdress, frequency.values);
 }
 
+// Reseta falha 
 async function resetFault() {
-    console.log("Funcao de reset de falha chamada...");
     driver.setData(resetaFalhaCLPAddress, 1);
+}
+
+// Liga
+async function setOn() {
+    driver.setData(ligarCLPAddress, 1);
+}
+
+// Desliga
+async function setOff() {
+    driver.setData(desligarCLPAddress, 1);
 }
 
 async function readAsciiFromCLPAddress(tagAddress, tagLength) {
@@ -172,8 +190,23 @@ async function checkCircuit() {
     return canChange;
 }
 
+ligarSubscriptionIHMAddress.onResponse((_err, data) => {
+      checkCircuit().then(canChange => {
+          if (canChange && data?.values) {
+              setOn();
+          }
+      });
+  });
+
+desligarSubscriptionIHMAddress.onResponse((_err, data) => {
+      checkCircuit().then(canChange => {
+          if (canChange && data?.values) {
+              setOff();
+          }
+      });
+});
+
 resetFalhaSubscriptionIHMAddress.onResponse((_err, data) => {
-  //  console.log("Reset de falha subscription");
     checkCircuit().then(canChange => {
         if (canChange && data?.values) {
             resetFault();
