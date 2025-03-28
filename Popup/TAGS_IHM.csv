@@ -123,16 +123,16 @@ LIGAR,Local HMI,LB,200,,Undesignated
 DESLIGAR,Local HMI,LB,100,,Undesignated
 STATUS_FALHA,Local HMI,LB,14,,Undesignated
 RESET,Local HMI,LB,15,,Undesignated
-MANUAL,Local HMI,LB,16,,Undesignated
-AUTOMATICO,Local HMI,LB,17,,Undesignated
+MANUAL,Local HMI,LB,400,,Undesignated
+STATUS_MANUAL_AUTOMATICO,Local HMI,LB,17,,Undesignated
 INTERT,Local HMI,LB,18,,Undesignated
 IN-STS,Local HMI,LB,19,,Undesignated
 COMM,Local HMI,LB,20,,Undesignated
-REM,Local HMI,LB,21,,Undesignated
-REV,Local HMI,LB,22,,Undesignated
+STATUS_LOCAL_REMOTO,Local HMI,LB,21,,Undesignated
+STATUS_SENTIDO_DE_GIRO_REV,Local HMI,LB,22,,Undesignated
 FCURS,Local HMI,LB,23,,Undesignated
 EMERG,Local HMI,LB,24,,Undesignated
-READY,Local HMI,LB,25,,Undesignated
+STATUS_READY,Local HMI,LB,25,,Undesignated
 TAG,Local HMI,LW,200,,Undesignated
 SHOW_POPUP,Local HMI,LB,250,,Undesignated
 MOTOR_ATUAL_POPUP_ABERTO,Local HMI,LW,350,,Undesignated
@@ -141,3 +141,4 @@ FREQUENCIA_MOTOR_01,Local HMI,LW,650,,32-bit Float
 FREQUENCIA_MOTOR_02,Local HMI,LW,700,,32-bit Float
 KEYPAD_SETPOINT_HABILITADO,Local HMI,LB,950,,Undesignated
 NOME,Local HMI,LW,700,,Undesignated
+AUTOMATICO,Local HMI,LB,300,,Undesignated
