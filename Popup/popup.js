@@ -37,11 +37,54 @@ const desligarSubscriptionIHMAddress = this.config.ihm.DesligarSubscriptionIHM;
 const statusFalhaCLPAddress = this.config.clp.StatusFalhaCLP;
 const statusFalhaIHMAddress = this.config.ihm.StatusFalhaIHM;
 
+// Status manual/automatico
+const statusManualAutomaticoCLPAddress = this.config.clp.StatusManualAutomaticoCLP;
+const statusManualAutomaticoIHMAddress = this.config.ihm.StatusManualAutomaticoIHM;
+
+// Manual/Automatico
+const manualSubscriptionIHMAddress = this.config.ihm.ManualSubscriptionIHM;
+const automaticoSubscriptionIHMAddress = this.config.ihm.AutomaticoSubscriptionIHM;
+
+// Manual/automatico
+const manualAutomaticoCLPAddress = this.config.clp.ManualAutomaticoCLP;
+
+// Status ready
+const statusReadyCLPAddress = this.config.clp.StatusReadyCLP;
+const statusReadyIHMAddress = this.config.ihm.StatusReadyIHM;
+
+// Status local/Remoto
+const statusLocalRemotoCLPAddress = this.config.clp.StatusLocalRemotoCLP;
+const statusLocalRemotoIHMAddress = this.config.ihm.StatusLocalRemotoIHM;
+
+// Status sentido de giro Rev
+const statusSentidoDeGiroRevCLPAddress = this.config.clp.StatusSentidoDeGiroRevCLP;
+const statusSentidoDeGiroRevIHMAddress = this.config.ihm.StatusSentidoDeGiroRevIHM;
+
+// Status intertravamento habilitado
+const statusIntertravamentoCLPAddress = this.config.clp.StatusIntertravamentoCLP;
+const statusIntertravamentoIHMAddress = this.config.ihm.StatusIntertravamentoIHM;
+
+// Status falha de emergencia 
+const statusFalhaEmergIHMAddress = this.config.ihm.StatusFalhaEmergIHM;
+const statusFalhaEmergCLPAddress = this.config.clp.StatusFalhaEmergCLP;
+
+// Status de comunicacao
+const statusCommCLPAddress = this.config.clp.StatusCommCLP;
+const statusCommIHMAddress = this.config.ihm.StatusCommIHM;
+
+// Status inversor ligado
+const statusInStsCLPAddress = this.config.clp.StatusInStsCLP;
+const statusInStsIHMAddress = this.config.ihm.StatusInStsIHM;
+
+// Status de fim de curso 
+const statusFimDeCursoCLPAddress = this.config.clp.StatusFimDeCursoCLP;
+const statusFimDeCursoIHMAddress = this.config.ihm.StatusFimDeCursoIHM;
+
 // Tag com o endereco de reset de falha
 const resetaFalhaCLPAddress = this.config.clp.ResetaFalhaCLP;
 
 // Detecta quando o botao de reset de falha for acionado na IHM
-const resetFalhaSubscriptionIHMAddress =  this.config.ihm.ResetFalhaSubscriptionIHM;
+const resetFalhaSubscriptionIHMAddress = this.config.ihm.ResetFalhaSubscriptionIHM;
 
 // Tag 
 const tagEquipamentoCLPAddress = this.config.clp.TagEquipamentoCLP;
@@ -94,6 +137,11 @@ async function setOn() {
 // Desliga
 async function setOff() {
     driver.setData(desligarCLPAddress, 1);
+}
+
+// Passa para manual/automatico
+async function setManAuto(manAuto) {
+    driver.setData(manualAutomaticoCLPAddress, manAuto);
 }
 
 async function readAsciiFromCLPAddress(tagAddress, tagLength) {
@@ -154,6 +202,15 @@ async function updateInfoPopup() {
     const correnteDoMotorRecebida = await driver.promises.getData(correnteCLPAddress, 1);
     const statusLigadoRecebido = await driver.promises.getData(statusLigadoCLPAddress, 1);
     const statusFalhaRecebido = await driver.promises.getData(statusFalhaCLPAddress, 1);
+    const statusManAutoRecebido = await driver.promises.getData(statusManualAutomaticoCLPAddress, 1);
+    const statusReadyRecebido = await driver.promises.getData(statusReadyCLPAddress, 1);
+    const statusLocalRemotoRecebido = await driver.promises.getData(statusLocalRemotoCLPAddress, 1);
+    const statusSentidoDeGiroRevRecebido = await driver.promises.getData(statusSentidoDeGiroRevCLPAddress, 1);
+    const statusIntertravamentoRecebido = await driver.promises.getData(statusIntertravamentoCLPAddress, 1);
+    const statusFalhaEmergRecebido = await driver.promises.getData(statusFalhaEmergCLPAddress, 1);
+    const statusDeComunicacaoRecebido = await driver.promises.getData(statusCommCLPAddress, 1);
+    const statusFimDeCursoRecebido = await driver.promises.getData(statusFimDeCursoCLPAddress, 1);
+    const statusInversorLigadoRecebido = await driver.promises.getData(statusInStsCLPAddress, 1);
 
     driver.setStringData(tagEquipamentoIHMAddress, tagWordLength, tagEquipamentoRecebida);
     driver.setStringData(nomeEquipamentoIHMAddress, tagWordLength, nomeEquipamentoRecebido);
@@ -162,6 +219,15 @@ async function updateInfoPopup() {
     driver.setData(correnteIHMAddress, correnteDoMotorRecebida.values);
     driver.setData(statusLigadoIHMAddress, statusLigadoRecebido.values);
     driver.setData(statusFalhaIHMAddress, statusFalhaRecebido.values);
+    driver.setData(statusManualAutomaticoIHMAddress, statusManAutoRecebido.values);
+    driver.setData(statusReadyIHMAddress, statusReadyRecebido.values);
+    driver.setData(statusLocalRemotoIHMAddress, statusLocalRemotoRecebido.values);
+    driver.setData(statusSentidoDeGiroRevIHMAddress, statusSentidoDeGiroRevRecebido.values);
+    driver.setData(statusIntertravamentoIHMAddress, statusIntertravamentoRecebido.values);
+    driver.setData(statusFalhaEmergIHMAddress, statusFalhaEmergRecebido.values);
+    driver.setData(statusCommIHMAddress, statusDeComunicacaoRecebido.values);
+    driver.setData(statusFimDeCursoIHMAddress, statusFimDeCursoRecebido.values);
+    driver.setData(statusInStsIHMAddress, statusInversorLigadoRecebido.values);
 
     driver.getData(keypadSetPointHabilitadoIHMAddress, 1, (error, data) => {
         // Se o valor do setpoint estiver sendo alterado entao nao deve ser atualizado com o valor do CLP
@@ -191,19 +257,19 @@ async function checkCircuit() {
 }
 
 ligarSubscriptionIHMAddress.onResponse((_err, data) => {
-      checkCircuit().then(canChange => {
-          if (canChange && data?.values) {
-              setOn();
-          }
-      });
-  });
+    checkCircuit().then(canChange => {
+        if (canChange && data?.values) {
+            setOn();
+        }
+    });
+});
 
 desligarSubscriptionIHMAddress.onResponse((_err, data) => {
-      checkCircuit().then(canChange => {
-          if (canChange && data?.values) {
-              setOff();
-          }
-      });
+    checkCircuit().then(canChange => {
+        if (canChange && data?.values) {
+            setOff();
+        }
+    });
 });
 
 resetFalhaSubscriptionIHMAddress.onResponse((_err, data) => {
@@ -221,6 +287,26 @@ changeFrequencySubscriptionIHMAddress.onResponse((_err, _data) => {
                 updateFrequency();
             }
         });
+    });
+});
+
+manualSubscriptionIHMAddress.onResponse((_err, data) => {
+    checkCircuit().then(canChange => {
+        if (canChange && data?.values) {
+            setManAuto(0).then(() => {
+                console.log("Botao de manual acionado...");
+            });
+        }
+    });
+});
+
+automaticoSubscriptionIHMAddress.onResponse((_err, data) => {
+    checkCircuit().then(canChange => {
+        if (canChange && data?.values) {
+            setManAuto(1).then(() => {
+                console.log("Botao de automatico acionado...");
+            });
+        }
     });
 });
 
@@ -249,9 +335,6 @@ mouseArea.on('click', (mouseEvent) => {
         // Verifica o status atual do popup
         isPopupOpen().then((isOPen) => {
 
-            // Funcao para alterar o status do motor (shape picture), ligado, desligado, em falha, etc.
-            setMotorState(1);
-            
             // Se o popup nao estiver aberto (assumindo que 0 significa fechado)
             if (isOPen[0] === 0) {
                 updateInfoPopup().then(() => {
@@ -288,5 +371,25 @@ const setMotorState = (newState) => {
     this.state = newState;
 };
 
+async function checkStatusMotor() {
+    const statusLigadoRecebido = await driver.promises.getData(statusLigadoCLPAddress, 1);
+    const statusFalhaRecebido = await driver.promises.getData(statusFalhaCLPAddress, 1);
+
+    if (statusLigadoRecebido.values[0] === 1) {
+        setMotorState(1);
+        return;
+    }
+
+    if (statusFalhaRecebido.values[0] === 1) {
+        setMotorState(3);
+        return;
+    }
+
+    setMotorState(0);
+}
+
 // Checa periodicamente se o popup esta fechado
 setInterval(checkPopupStatus, 1000);
+
+// Checa periodicamente se o motor esta, ligado, desligado ou em falha.
+setInterval(checkStatusMotor, 1000);
