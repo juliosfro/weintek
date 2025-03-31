@@ -1,119 +1,87 @@
-Nome_6_2-L1,Local HMI,LW,0,,Undesignated
-Nome_6_2-L2,Local HMI,LW,8,,Undesignated
-Nome_M_9_1-L1,Local HMI,LW,16,,Undesignated
-Nome_M_9_1-L2,Local HMI,LW,24,,Undesignated
-Nome_M_09_04-L1,Local HMI,LW,32,,Undesignated
-Nome_M_09_04-L2,Local HMI,LW,40,,Undesignated
-Nome_M_09_05-L1,Local HMI,LW,48,,Undesignated
-Nome_M_09_05-L2,Local HMI,LW,56,,Undesignated
-Nome_M_9_8-L1,Local HMI,LW,64,,Undesignated
-Nome_M_9_8-L2,Local HMI,LW,72,,Undesignated
-Nome_M_09_94-L1,Local HMI,LW,80,,Undesignated
-Nome_M_09_94-L2,Local HMI,LW,88,,Undesignated
-Nome_M_09_93-L1,Local HMI,LW,96,,Undesignated
-Nome_M_09_93-L2,Local HMI,LW,104,,Undesignated
-Nome_M_09_24-L1,Local HMI,LW,112,,Undesignated
-Nome_M_09_24-L2,Local HMI,LW,120,,Undesignated
-Nome_M_09_23-L1,Local HMI,LW,128,,Undesignated
-Nome_M_09_23-L2,Local HMI,LW,136,,Undesignated
-Nome_M_09_06-L1,Local HMI,LW,144,,Undesignated
-Nome_M_09_06-L2,Local HMI,LW,152,,Undesignated
-Nome_M_09_25-L1,Local HMI,LW,160,,Undesignated
-Nome_M_09_25-L2,Local HMI,LW,168,,Undesignated
-Nome_M_08_10-L1,Local HMI,LW,176,,Undesignated
-Nome_M_08_10-L2,Local HMI,LW,184,,Undesignated
-Nome_EXTRATOR_DE_PELE_PESCOCO-L1,Local HMI,LW,368,,Undesignated
-Nome_EXTRATOR_DE_PELE_PESCOCO-L2,Local HMI,LW,376,,Undesignated
-Nome_M_10_07-L1,Local HMI,LW,384,,Undesignated
-Nome_M_10_07-L2,Local HMI,LW,392,,Undesignated
-Nome_M_17_21-L1,Local HMI,LW,400,,Undesignated
-Nome_M_17_21-L2,Local HMI,LW,408,,Undesignated
-Nome_M_9_7-L1,Local HMI,LW,496,,Undesignated
-Nome_M_9_7-L2,Local HMI,LW,504,,Undesignated
-UAC command execution result : succeeds,Local HMI,LW_Bit,895100,,Undesignated
-UAC command execution result : invalid command,Local HMI,LW_Bit,895101,,Undesignated
-UAC command execution result : account exists,Local HMI,LW_Bit,895102,,Undesignated
-UAC command execution result : account not exists,Local HMI,LW_Bit,895103,,Undesignated
-UAC command execution result : password error,Local HMI,LW_Bit,895104,,Undesignated
-UAC command execution result : deny command,Local HMI,LW_Bit,895105,,Undesignated
-UAC command execution result : invalid name,Local HMI,LW_Bit,895106,,Undesignated
-UAC command execution result : invalid password character exists,Local HMI,LW_Bit,895107,,Undesignated
-UAC command execution result : invalid import data,Local HMI,LW_Bit,895108,,Undesignated
-UAC command execution result : out of validity range,Local HMI,LW_Bit,895109,,Undesignated
-UAC privilege (Class A ),Local HMI,LW_Bit,895300,,Undesignated
-UAC privilege (Class B ),Local HMI,LW_Bit,895301,,Undesignated
-UAC privilege (Class C ),Local HMI,LW_Bit,895302,,Undesignated
-UAC privilege (Class D ),Local HMI,LW_Bit,895303,,Undesignated
-UAC privilege (Class E ),Local HMI,LW_Bit,895304,,Undesignated
-UAC privilege (Class F ),Local HMI,LW_Bit,895305,,Undesignated
-UAC privilege (Class G ),Local HMI,LW_Bit,895306,,Undesignated
-UAC privilege (Class H ),Local HMI,LW_Bit,895307,,Undesignated
-UAC privilege (Class I ),Local HMI,LW_Bit,895308,,Undesignated
-UAC privilege (Class J ),Local HMI,LW_Bit,895309,,Undesignated
-UAC privilege (Class K ),Local HMI,LW_Bit,895310,,Undesignated
-UAC privilege (Class L ),Local HMI,LW_Bit,895311,,Undesignated
-UAC command,Local HMI,LW,8950,,Undesignated
-UAC command execution result,Local HMI,LW,8951,,Undesignated
-UAC user index,Local HMI,LW,8952,,Undesignated
-UAC user privilege,Local HMI,LW,8953,,Undesignated
-UAC user name,Local HMI,LW,8954,,Undesignated
-UAC password,Local HMI,LW,8962,,Undesignated
-Nome_M_09_21_L1,Local HMI,LW,512,,Undesignated
-Nome_M_09_21_L2,Local HMI,LW,520,,Undesignated
-Nome_M_09_22_L1,Local HMI,LW,528,,Undesignated
-Nome_M_09_22_L2,Local HMI,LW,536,,Undesignated
-Nome_M_09_27_L1,Local HMI,LW,544,,Undesignated
-Nome_M_09_27_L2,Local HMI,LW,552,,Undesignated
-Nome_M_09_28_L1,Local HMI,LW,560,,Undesignated
-Nome_M_09_28_L2,Local HMI,LW,568,,Undesignated
-Nome_M_09_36_L1,Local HMI,LW,576,,Undesignated
-Nome_M_09_36_L2,Local HMI,LW,584,,Undesignated
-Nome_M_09_37_L1,Local HMI,LW,592,,Undesignated
-Nome_M_09_37_L2,Local HMI,LW,600,,Undesignated
-Nome_M_09_38_L1,Local HMI,LW,608,,Undesignated
-Nome_M_09_38_L2,Local HMI,LW,616,,Undesignated
-Nome_M_09_40_L1,Local HMI,LW,624,,Undesignated
-Nome_M_09_40_L2,Local HMI,LW,632,,Undesignated
-Nome_M_09_41_L1,Local HMI,LW,640,,Undesignated
-Nome_M_09_41_L2,Local HMI,LW,648,,Undesignated
-Nome_M_09_42_L1,Local HMI,LW,656,,Undesignated
-Nome_M_09_42_L2,Local HMI,LW,664,,Undesignated
-Nome_M_10_20_L1,Local HMI,LW,672,,Undesignated
-Nome_M_10_20_L2,Local HMI,LW,680,,Undesignated
-Nome_M_10_21_L1,Local HMI,LW,688,,Undesignated
-Nome_M_10_21_L2,Local HMI,LW,696,,Undesignated
-Nome_M_16_5_L1,Local HMI,LW,704,,Undesignated
-Nome_M_16_5_L2,Local HMI,LW,712,,Undesignated
-StringOutput,Local HMI,LW,800,,Undesignated
-Esteira_b19_nome_ihm,Local HMI,LW,832,,Undesignated
-UAC command execution result : succeeds_1,Local HMI,PLW_Bit,895100,,Undesignated
-UAC command execution result : invalid command_1,Local HMI,PLW_Bit,895101,,Undesignated
-UAC command execution result : account exists_1,Local HMI,PLW_Bit,895102,,Undesignated
-UAC command execution result : account not exists_1,Local HMI,PLW_Bit,895103,,Undesignated
-UAC command execution result : password error_1,Local HMI,PLW_Bit,895104,,Undesignated
-UAC command execution result : deny command_1,Local HMI,PLW_Bit,895105,,Undesignated
-UAC command execution result : invalid name_1,Local HMI,PLW_Bit,895106,,Undesignated
-UAC command execution result : invalid password character exists_1,Local HMI,PLW_Bit,895107,,Undesignated
-UAC command execution result : invalid import data_1,Local HMI,PLW_Bit,895108,,Undesignated
-UAC command execution result : out of validity range_1,Local HMI,PLW_Bit,895109,,Undesignated
-UAC privilege (Class A )_1,Local HMI,PLW_Bit,895300,,Undesignated
-UAC privilege (Class B )_1,Local HMI,PLW_Bit,895301,,Undesignated
-UAC privilege (Class C )_1,Local HMI,PLW_Bit,895302,,Undesignated
-UAC privilege (Class D )_1,Local HMI,PLW_Bit,895303,,Undesignated
-UAC privilege (Class E )_1,Local HMI,PLW_Bit,895304,,Undesignated
-UAC privilege (Class F )_1,Local HMI,PLW_Bit,895305,,Undesignated
-UAC privilege (Class G )_1,Local HMI,PLW_Bit,895306,,Undesignated
-UAC privilege (Class H )_1,Local HMI,PLW_Bit,895307,,Undesignated
-UAC privilege (Class I )_1,Local HMI,PLW_Bit,895308,,Undesignated
-UAC privilege (Class J )_1,Local HMI,PLW_Bit,895309,,Undesignated
-UAC privilege (Class K )_1,Local HMI,PLW_Bit,895310,,Undesignated
-UAC privilege (Class L )_1,Local HMI,PLW_Bit,895311,,Undesignated
-UAC command_1,Local HMI,PLW,8950,,Undesignated
-UAC command execution result_1,Local HMI,PLW,8951,,Undesignated
-UAC user index_1,Local HMI,PLW,8952,,Undesignated
-UAC user privilege_1,Local HMI,PLW,8953,,Undesignated
-UAC user name_1,Local HMI,PLW,8954,,Undesignated
-UAC password_1,Local HMI,PLW,8962,,Undesignated
+UAC command execution result : succeeds,Local HMI,PLW_Bit,895100,,Undesignated
+UAC command execution result : invalid command,Local HMI,PLW_Bit,895101,,Undesignated
+UAC command execution result : account exists,Local HMI,PLW_Bit,895102,,Undesignated
+UAC command execution result : account not exists,Local HMI,PLW_Bit,895103,,Undesignated
+UAC command execution result : password error,Local HMI,PLW_Bit,895104,,Undesignated
+UAC command execution result : deny command,Local HMI,PLW_Bit,895105,,Undesignated
+UAC command execution result : invalid name,Local HMI,PLW_Bit,895106,,Undesignated
+UAC command execution result : invalid password character exists,Local HMI,PLW_Bit,895107,,Undesignated
+UAC command execution result : invalid import data,Local HMI,PLW_Bit,895108,,Undesignated
+UAC command execution result : out of validity range,Local HMI,PLW_Bit,895109,,Undesignated
+UAC privilege (Class A ),Local HMI,PLW_Bit,895300,,Undesignated
+UAC privilege (Class B ),Local HMI,PLW_Bit,895301,,Undesignated
+UAC privilege (Class C ),Local HMI,PLW_Bit,895302,,Undesignated
+UAC privilege (Class D ),Local HMI,PLW_Bit,895303,,Undesignated
+UAC privilege (Class E ),Local HMI,PLW_Bit,895304,,Undesignated
+UAC privilege (Class F ),Local HMI,PLW_Bit,895305,,Undesignated
+UAC privilege (Class G ),Local HMI,PLW_Bit,895306,,Undesignated
+UAC privilege (Class H ),Local HMI,PLW_Bit,895307,,Undesignated
+UAC privilege (Class I ),Local HMI,PLW_Bit,895308,,Undesignated
+UAC privilege (Class J ),Local HMI,PLW_Bit,895309,,Undesignated
+UAC privilege (Class K ),Local HMI,PLW_Bit,895310,,Undesignated
+UAC privilege (Class L ),Local HMI,PLW_Bit,895311,,Undesignated
+UAC command,Local HMI,PLW,8950,,Undesignated
+UAC command execution result,Local HMI,PLW,8951,,Undesignated
+UAC user index,Local HMI,PLW,8952,,Undesignated
+UAC user privilege,Local HMI,PLW,8953,,Undesignated
+UAC user name,Local HMI,PLW,8954,,Undesignated
+UAC password,Local HMI,PLW,8962,,Undesignated
+UAC command execution result : succeeds_1,Local HMI,LW_Bit,895100,,Undesignated
+UAC command execution result : invalid command_1,Local HMI,LW_Bit,895101,,Undesignated
+UAC command execution result : account exists_1,Local HMI,LW_Bit,895102,,Undesignated
+UAC command execution result : account not exists_1,Local HMI,LW_Bit,895103,,Undesignated
+UAC command execution result : password error_1,Local HMI,LW_Bit,895104,,Undesignated
+UAC command execution result : deny command_1,Local HMI,LW_Bit,895105,,Undesignated
+UAC command execution result : invalid name_1,Local HMI,LW_Bit,895106,,Undesignated
+UAC command execution result : invalid password character exists_1,Local HMI,LW_Bit,895107,,Undesignated
+UAC command execution result : invalid import data_1,Local HMI,LW_Bit,895108,,Undesignated
+UAC command execution result : out of validity range_1,Local HMI,LW_Bit,895109,,Undesignated
+UAC privilege (Class A )_1,Local HMI,LW_Bit,895300,,Undesignated
+UAC privilege (Class B )_1,Local HMI,LW_Bit,895301,,Undesignated
+UAC privilege (Class C )_1,Local HMI,LW_Bit,895302,,Undesignated
+UAC privilege (Class D )_1,Local HMI,LW_Bit,895303,,Undesignated
+UAC privilege (Class E )_1,Local HMI,LW_Bit,895304,,Undesignated
+UAC privilege (Class F )_1,Local HMI,LW_Bit,895305,,Undesignated
+UAC privilege (Class G )_1,Local HMI,LW_Bit,895306,,Undesignated
+UAC privilege (Class H )_1,Local HMI,LW_Bit,895307,,Undesignated
+UAC privilege (Class I )_1,Local HMI,LW_Bit,895308,,Undesignated
+UAC privilege (Class J )_1,Local HMI,LW_Bit,895309,,Undesignated
+UAC privilege (Class K )_1,Local HMI,LW_Bit,895310,,Undesignated
+UAC privilege (Class L )_1,Local HMI,LW_Bit,895311,,Undesignated
+UAC command_1,Local HMI,LW,8950,,Undesignated
+UAC command execution result_1,Local HMI,LW,8951,,Undesignated
+UAC user index_1,Local HMI,LW,8952,,Undesignated
+UAC user privilege_1,Local HMI,LW,8953,,Undesignated
+UAC user name_1,Local HMI,LW,8954,,Undesignated
+UAC password_1,Local HMI,LW,8962,,Undesignated
+UAC command execution result : succeeds_1_1,Local HMI,PLW_Bit,895100,,Undesignated
+UAC command execution result : invalid command_1_1,Local HMI,PLW_Bit,895101,,Undesignated
+UAC command execution result : account exists_1_1,Local HMI,PLW_Bit,895102,,Undesignated
+UAC command execution result : account not exists_1_1,Local HMI,PLW_Bit,895103,,Undesignated
+UAC command execution result : password error_1_1,Local HMI,PLW_Bit,895104,,Undesignated
+UAC command execution result : deny command_1_1,Local HMI,PLW_Bit,895105,,Undesignated
+UAC command execution result : invalid name_1_1,Local HMI,PLW_Bit,895106,,Undesignated
+UAC command execution result : invalid password character exists_1_1,Local HMI,PLW_Bit,895107,,Undesignated
+UAC command execution result : invalid import data_1_1,Local HMI,PLW_Bit,895108,,Undesignated
+UAC command execution result : out of validity range_1_1,Local HMI,PLW_Bit,895109,,Undesignated
+UAC privilege (Class A )_1_1,Local HMI,PLW_Bit,895300,,Undesignated
+UAC privilege (Class B )_1_1,Local HMI,PLW_Bit,895301,,Undesignated
+UAC privilege (Class C )_1_1,Local HMI,PLW_Bit,895302,,Undesignated
+UAC privilege (Class D )_1_1,Local HMI,PLW_Bit,895303,,Undesignated
+UAC privilege (Class E )_1_1,Local HMI,PLW_Bit,895304,,Undesignated
+UAC privilege (Class F )_1_1,Local HMI,PLW_Bit,895305,,Undesignated
+UAC privilege (Class G )_1_1,Local HMI,PLW_Bit,895306,,Undesignated
+UAC privilege (Class H )_1_1,Local HMI,PLW_Bit,895307,,Undesignated
+UAC privilege (Class I )_1_1,Local HMI,PLW_Bit,895308,,Undesignated
+UAC privilege (Class J )_1_1,Local HMI,PLW_Bit,895309,,Undesignated
+UAC privilege (Class K )_1_1,Local HMI,PLW_Bit,895310,,Undesignated
+UAC privilege (Class L )_1_1,Local HMI,PLW_Bit,895311,,Undesignated
+UAC command_1_1,Local HMI,PLW,8950,,Undesignated
+UAC command execution result_1_1,Local HMI,PLW,8951,,Undesignated
+UAC user index_1_1,Local HMI,PLW,8952,,Undesignated
+UAC user privilege_1_1,Local HMI,PLW,8953,,Undesignated
+UAC user name_1_1,Local HMI,PLW,8954,,Undesignated
+UAC password_1_1,Local HMI,PLW,8962,,Undesignated
 SETPOINT,Local HMI,LW,10,,32-bit Float
 VELOCIDADE_ATUAL_RPM,Local HMI,LW,890,,32-bit Unsigned
 FREQUENCIA,Local HMI,LW,580,,32-bit Float
@@ -137,8 +105,6 @@ TAG,Local HMI,LW,200,,Undesignated
 SHOW_POPUP,Local HMI,LB,250,,Undesignated
 MOTOR_ATUAL_POPUP_ABERTO,Local HMI,LW,350,,Undesignated
 CORRENTE,Local HMI,LW,900,,Undesignated
-FREQUENCIA_MOTOR_01,Local HMI,LW,650,,32-bit Float
-FREQUENCIA_MOTOR_02,Local HMI,LW,700,,32-bit Float
 KEYPAD_SETPOINT_HABILITADO,Local HMI,LB,950,,Undesignated
 NOME,Local HMI,LW,700,,Undesignated
 AUTOMATICO,Local HMI,LB,300,,Undesignated
