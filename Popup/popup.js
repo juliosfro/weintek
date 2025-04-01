@@ -16,6 +16,68 @@ const mouseAreaStartX = this.config.mouseArea.MouseAreaStartX;
 const mouseAreaStartY = this.config.mouseArea.MouseAreaStartY;
 const drawLineMouseArea = this.config.mouseArea.DrawLineMouseArea;
 
+// Definir o tamanho do canvas
+const widthLoadingSpinner = 85;
+const heightLoadingSpinner = 81;
+
+let angle = 0; // Inicia o spinner a partir do angulo zero.
+let loadingSpinnerActive = false; 
+let loadingSpinnerTimeout = null; // Variavel para armazenar o timeout da animacao
+
+// Funcao para desenhar o loading spinner
+function drawLoadingSpinner() {
+    if (!loadingSpinnerActive) return;  // Nao desenha o spinner se ele nao estiver ativo
+
+    canvas.clearRect(0, 0, widthLoadingSpinner, heightLoadingSpinner); 
+
+    // Configura o estilo do desenho
+    canvas.strokeStyle = "#2ecc71"; // Cor do spinner (verde)
+    canvas.lineWidth = 6; // Largura da linha
+    canvas.lineCap = "round"; // Pontas da linha arredondadas
+
+    // Configura o padrao de linha pontilhada
+    canvas.setLineDash([4, 4]); // Define o padrao de traco (4px de linha, 4px de espaco)
+
+    // Calcula a posicao central e o raio
+    const centerX = widthLoadingSpinner / 2;
+    const centerY = heightLoadingSpinner / 2;
+    const radius = Math.min(widthLoadingSpinner, heightLoadingSpinner) / 2 - 10; // Raio ajustado para caber no canvas
+
+    // Comeca o caminho para desenhar o arco
+    canvas.beginPath();
+    canvas.arc(centerX, centerY, radius, -Math.PI / 2, angle - Math.PI / 2, false); // Desenha o arco baseado no angulo
+    canvas.stroke(); // Aplica o desenho no canvas
+
+    // Atualiza o angulo para girar o arco
+    angle += 0.05;
+
+    if (angle >= 2 * Math.PI) {
+        angle = 0; // Reseta o angulo quando ele completar uma volta
+    }
+
+    // Cria a animacao chamando a funcao de desenho repetidamente
+    loadingSpinnerTimeout = setTimeout(drawLoadingSpinner, 30); // Aproximadamente 30ms para animar
+}
+
+// Funcao para parar o spinner
+function stopLoadingSpinner() {
+    loadingSpinnerActive = false;
+    if (loadingSpinnerTimeout) {
+        clearTimeout(loadingSpinnerTimeout); // Limpa o timeout para parar o spinner
+    }
+    canvas.clearRect(0, 0, widthLoadingSpinner, heightLoadingSpinner); // Limpa o canvas
+}
+
+// Funcao para iniciar o spinner
+function startLoadingSpinner() {
+    loadingSpinnerActive = true;
+    angle = 0; // Reseta o angulo para 0 toda vez que o spinner for iniciado
+    drawLoadingSpinner(); // Inicia a animacao do spinner
+}
+
+// LoadingSpinner
+const startLoadingSpinnerIHMAddress = this.config.ihm.StartLoadingSpinnerIHM;
+
 const motorAtualClickIHMAdress = this.config.ihm.MotorAtualClickIHM;
 
 // Quando o valor desse bit eh setado para 1 entao o popup eh mostrado
@@ -84,7 +146,7 @@ const statusFimDeCursoIHMAddress = this.config.ihm.StatusFimDeCursoIHM;
 const resetaFalhaCLPAddress = this.config.clp.ResetaFalhaCLP;
 
 // Detecta quando o botao de reset de falha for acionado na IHM
-const resetFalhaSubscriptionIHMAddress = this.config.ihm.ResetFalhaSubscriptionIHM;
+const resetFalhaSubscriptionIHMAddress =  this.config.ihm.ResetFalhaSubscriptionIHM;
 
 // Tag 
 const tagEquipamentoCLPAddress = this.config.clp.TagEquipamentoCLP;
@@ -257,19 +319,19 @@ async function checkCircuit() {
 }
 
 ligarSubscriptionIHMAddress.onResponse((_err, data) => {
-    checkCircuit().then(canChange => {
-        if (canChange && data?.values) {
-            setOn();
-        }
-    });
-});
+      checkCircuit().then(canChange => {
+          if (canChange && data?.values) {
+              setOn();
+          }
+      });
+  });
 
 desligarSubscriptionIHMAddress.onResponse((_err, data) => {
-    checkCircuit().then(canChange => {
-        if (canChange && data?.values) {
-            setOff();
-        }
-    });
+      checkCircuit().then(canChange => {
+          if (canChange && data?.values) {
+              setOff();
+          }
+      });
 });
 
 resetFalhaSubscriptionIHMAddress.onResponse((_err, data) => {
@@ -283,7 +345,7 @@ resetFalhaSubscriptionIHMAddress.onResponse((_err, data) => {
 changeFrequencySubscriptionIHMAddress.onResponse((_err, _data) => {
     checkCircuit().then(canChangeFrequency => {
         driver.getData(keypadSetPointHabilitadoIHMAddress, 1, (_error, isNumpadSetPointEnabled) => {
-            if (canChangeFrequency && isNumpadSetPointEnabled.values) {
+            if (canChangeFrequency && isNumpadSetPointEnabled.values[0] === 1) {
                 updateFrequency();
             }
         });
@@ -328,30 +390,35 @@ mouseArea.on('click', (mouseEvent) => {
     const buttonHeight = mouseAreaHeight;
     const x = mouseAreaStartX;
     const y = mouseAreaStartY;
-
+    
     if (mouseEvent.x >= x && mouseEvent.x <= x + buttonWidth && mouseEvent.y >= y && mouseEvent.y <= y + buttonHeight) {
         driver.setStringData(motorAtualClickIHMAdress, tagWordLength, tagEquipamentoRecebida);
 
-        // Verifica o status atual do popup
-        isPopupOpen().then((isOPen) => {
-
-            // Se o popup nao estiver aberto (assumindo que 0 significa fechado)
-            if (isOPen[0] === 0) {
-                updateInfoPopup().then(() => {
-                    // Abre o popup
-                    driver.setData(showPopupIHMAddress, 1);
-                    // Redesenha a area de click do mouse
-                    drawMouseArea();
-
-                    // Inicia o intervalo para atualizar as informacoes a cada 1 segundo
-                    popupInterval = setInterval(() => {
+        driver.getData(startLoadingSpinnerIHMAddress, 1, (error, data) => {
+            // Se nao houver popup em processo de carregamento (loading...)
+            if (data.values[0] === 0) {
+                isPopupOpen().then((isOPen) => {          
+                    // Se o popup nao estiver aberto (assumindo que 0 significa fechado)
+                    if (isOPen[0] === 0) {
+                    startLoadingSpinner();
+                    driver.setData(startLoadingSpinnerIHMAddress, 1);
                         updateInfoPopup().then(() => {
-                            // console.log("Atualizando informacoes do popup...");
+                            // Abre o popup
+                            driver.setData(showPopupIHMAddress, 1);
+                            // Redesenha a area de click do mouse
+                            drawMouseArea();
+
+                            // Inicia o intervalo para atualizar as informacoes a cada 1 segundo
+                            popupInterval = setInterval(() => {
+                                updateInfoPopup().then(() => {
+                                    // console.log("Atualizando informacoes do popup...");
+                                });
+                            }, 1000);  // Atualiza a cada 1 segundo
                         });
-                    }, 1000);  // Atualiza a cada 1 segundo
+                    }
                 });
-            }
-        });
+           }
+     });
     }
 });
 
@@ -363,6 +430,11 @@ async function checkPopupStatus() {
             clearInterval(popupInterval);
             // Reseta a variavel do intervalo 
             popupInterval = null;
+        }
+
+        if (isOPen[0] === 1) {
+          // Quando entrar nessa condicao o loading deve deixar de ser exibido...
+          stopLoadingSpinner();
         }
     });
 }
