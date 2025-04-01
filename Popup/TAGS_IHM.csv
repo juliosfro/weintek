@@ -108,3 +108,4 @@ CORRENTE,Local HMI,LW,900,,Undesignated
 KEYPAD_SETPOINT_HABILITADO,Local HMI,LB,950,,Undesignated
 NOME,Local HMI,LW,700,,Undesignated
 AUTOMATICO,Local HMI,LB,300,,Undesignated
+START_LOADING_SPINNER,Local HMI,LB,900,,Undesignated
