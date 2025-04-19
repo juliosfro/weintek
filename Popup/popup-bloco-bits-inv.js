@@ -167,13 +167,14 @@ async function updateInfoPopup() {
         [ihm.StatusInStsIHM, statusInversor]
     ];
 
-    writes.forEach(([addr, value]) => {
+    // Espera todos os dados serem escritos na IHM
+    await Promise.all(writes.map(async ([addr, value]) => {
         if (typeof value === 'string') {
-            driver.setStringData(addr, tagLength, value);
+            await driver.promises.setStringData(addr, tagLength, value);
         } else {
-            driver.setData(addr, value);
+            await driver.promises.setData(addr, value);
         }
-    });
+    }));
 
     driver.getData(ihm.KeypadSetPointHabilitadoIHM, 1, (_err, data) => {
         if (data.values[0] === 0) {
