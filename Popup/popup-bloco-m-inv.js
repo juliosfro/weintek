@@ -136,13 +136,13 @@ async function updateInfoPopup() {
         clp.StatusLigadoCLP, clp.StatusFalhaCLP, clp.StatusManualAutomaticoCLP,
         clp.StatusIntertravamentoCLP, clp.StatusFalhaEmergCLP,
         clp.StatusFimDeCursoCLP, clp.StatusInStsCLP
-    ].map(addr => driver.promises.getData(addr, 1)));
+    ].map(address => driver.promises.getData(address, 1)));
 
     // Extracao dos dados lidos do CLP
     const [
         velocidadeRpm, frequencia, corrente, statusLigado, statusFalha, statusManAuto,
         statusInterTrav, statusFalhaEmerg, statusFimCurso, statusInversor
-    ] = dadosCLP.map(d => d.values);
+    ] = dadosCLP.map(dados => dados.values);
 
     // Dados que serao escritos na IHM
     const dadosIHM = [
@@ -193,7 +193,6 @@ async function checkCircuit() {
 }
 
 // === EVENTOS ===
-
 function createResponseHandler(callback) {
     return (_err, data) => {
         checkCircuit().then(valid => {
