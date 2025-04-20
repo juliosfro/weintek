@@ -32,7 +32,6 @@ let motorAtualClicado = "";
 let canChange = false;
 
 // === CONVERSAO DE ASCII PARA UTF-8 ===
-
 function convertToValidBytes(data) {
     return data.map(v => (v < 0 ? v + 256 : v)).filter(v => v >= 0 && v <= 255);
 }
@@ -59,7 +58,6 @@ async function readAsciiFromCLPAddress(tagAddress) {
 }
 
 // === CONFIGURACOES AREA DE CLICK DO MOUSE ===
-
 function drawMouseArea() {
     canvas.fillStyle = "rgba(0, 0, 0, 0)";
     canvas.fillRect(MouseAreaStartX, MouseAreaStartY, MouseAreaWidth, MouseAreaHeight);
@@ -72,7 +70,6 @@ function drawMouseArea() {
 }
 
 // === LOADING SPINNER ===
-
 function drawLoadingSpinner() {
     if (!loadingSpinnerActive) return;
 
@@ -106,7 +103,6 @@ function stopLoadingSpinner() {
 }
 
 // === ACOES NO CLP ===
-
 async function setOn() {
     driver.setData(clp.LigaCLP, 1);
 }
@@ -130,7 +126,6 @@ async function updateFrequency() {
 }
 
 // === POPUP ===
-
 async function updateInfoPopup() {
     const tagEquipamento = await readAsciiFromCLPAddress(clp.TagEquipamentoCLP);
     const nomeEquipamento = await readAsciiFromCLPAddress(clp.NomeEquipamentoCLP);
@@ -204,7 +199,6 @@ async function checkCircuit() {
 }
 
 // === EVENTOS ===
-
 function createResponseHandler(callback) {
     return (_err, data) => {
         checkCircuit().then(valid => {
@@ -229,7 +223,6 @@ ihm.SetpointFrequenciaSubscriptionIHM.onResponse(() => {
 });
 
 // === MOUSE ===
-
 mouseArea.on('click', ({ x, y }) => {
     if (x >= MouseAreaStartX && x <= MouseAreaStartX + MouseAreaWidth &&
         y >= MouseAreaStartY && y <= MouseAreaStartY + MouseAreaHeight) {
@@ -255,8 +248,6 @@ mouseArea.on('click', ({ x, y }) => {
         });
     }
 });
-
-// === LOOP ===
 
 const setMotorState = (newState) => {
     this.state = newState;
@@ -285,6 +276,5 @@ function checkPopupStatus() {
 }
 
 drawMouseArea();
-
 setInterval(checkPopupStatus, 1000);
 setInterval(checkStatusMotor, 1000);
