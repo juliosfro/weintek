@@ -1,13 +1,13 @@
 const encoding = require('/encoding.js');
 
-// Componentes visuais
+// === COMPONENTES VISUAIS ===
 const canvas = new Canvas();
 const mouseArea = new MouseArea();
 
 this.widget.add(canvas);
 this.widget.add(mouseArea);
 
-// === CONFIGURAÇÕES ===
+// === CONFIGURACOES ===
 const {
     clp, ihm, mouseArea: mouseCfg, popUp
 } = this.config;
@@ -23,7 +23,7 @@ const {
 
 const canvasSize = { width: 85, height: 81 };
 
-// === VARIÁVEIS ===
+// === VARIAVEIS ===
 let angle = 0;
 let loadingSpinnerActive = false;
 let loadingSpinnerTimeout = null;
@@ -31,8 +31,7 @@ let popupInterval = null;
 let motorAtualClicado = "";
 let canChange = false;
 
-// === UTILS ===
-
+// === CONVERSAO DE ASCII PARA UTF-8 ===
 function convertToValidBytes(data) {
     return data.map(v => (v < 0 ? v + 256 : v)).filter(v => v >= 0 && v <= 255);
 }
@@ -58,6 +57,7 @@ async function readAsciiFromCLPAddress(tagAddress) {
     return convertToUtf8(data.values);
 }
 
+// === CONFIGURACOES AREA DE CLICK DO MOUSE ===
 function drawMouseArea() {
     canvas.fillStyle = "rgba(0, 0, 0, 0)";
     canvas.fillRect(MouseAreaStartX, MouseAreaStartY, MouseAreaWidth, MouseAreaHeight);
@@ -69,8 +69,7 @@ function drawMouseArea() {
     }
 }
 
-// === SPINNER ===
-
+// === LOADING SPINNER ===
 function drawLoadingSpinner() {
     if (!loadingSpinnerActive) return;
 
@@ -103,8 +102,7 @@ function stopLoadingSpinner() {
     canvas.clearRect(0, 0, canvasSize.width, canvasSize.height);
 }
 
-// === AÇÕES NO CLP ===
-
+// === ACOES NO CLP ===
 async function setOn() {
     driver.setData(clp.LigaCLP, 1);
 }
@@ -121,32 +119,33 @@ async function setManAuto(mode) {
     driver.setData(clp.ManualAutomaticoCLP, mode);
 }
 
-// Atualiza valor da frequência do setpoint
+// Atualiza a frequencia (Hz) conforme o valor digitado no campo de setPoint
 async function updateFrequency() {
     const { values } = await driver.promises.getData(ihm.SetPointIHM, 1);
     driver.setData(clp.FrequenciaCLP, values);
 }
 
 // === POPUP ===
-
 async function updateInfoPopup() {
     const tagEquipamento = await readAsciiFromCLPAddress(clp.TagEquipamentoCLP);
     const nomeEquipamento = await readAsciiFromCLPAddress(clp.NomeEquipamentoCLP);
 
-    const valores = await Promise.all([
+    // Dados lidos do CLP
+    const dadosCLP = await Promise.all([
         clp.VelocidadeRpmCLP, clp.FrequenciaCLP, clp.CorrenteCLP,
         clp.StatusLigadoCLP, clp.StatusFalhaCLP, clp.StatusManualAutomaticoCLP,
         clp.StatusIntertravamentoCLP, clp.StatusFalhaEmergCLP,
         clp.StatusFimDeCursoCLP, clp.StatusInStsCLP
     ].map(addr => driver.promises.getData(addr, 1)));
 
+    // Extracao dos dados lidos do CLP
     const [
         velocidadeRpm, frequencia, corrente, statusLigado, statusFalha, statusManAuto,
         statusInterTrav, statusFalhaEmerg, statusFimCurso, statusInversor
-    ] = valores.map(d => d.values);
+    ] = dadosCLP.map(d => d.values);
 
-    // Setar todos os dados na IHM
-    const writes = [
+    // Dados que serao escritos na IHM
+    const dadosIHM = [
         [ihm.TagEquipamentoIHM, tagEquipamento],
         [ihm.NomeEquipamentoIHM, nomeEquipamento],
         [ihm.VelocidadeRpmIHM, velocidadeRpm],
@@ -161,15 +160,16 @@ async function updateInfoPopup() {
         [ihm.StatusInStsIHM, statusInversor]
     ];
 
-    // Espera todos os dados serem escritos na IHM
-    await Promise.all(writes.map(async ([addr, value]) => {
+    // Grava e espera todos os dados serem escritos na IHM
+    await Promise.all(dadosIHM.map(async ([address, value]) => {
         if (typeof value === 'string') {
-            await driver.promises.setStringData(addr, tagLength, value);
+            await driver.promises.setStringData(address, tagLength, value);
         } else {
-            await driver.promises.setData(addr, value);
+            await driver.promises.setData(address, value);
         }
     }));
 
+    // Se o campo setPoint nao estiver sendo editado entao pode receber novo valor
     driver.getData(ihm.KeypadSetPointHabilitadoIHM, 1, (_err, data) => {
         if (data.values[0] === 0) {
             driver.setData(ihm.SetPointIHM, frequencia);
@@ -218,7 +218,6 @@ ihm.SetpointFrequenciaSubscriptionIHM.onResponse(() => {
 });
 
 // === MOUSE ===
-
 mouseArea.on('click', ({ x, y }) => {
     if (x >= MouseAreaStartX && x <= MouseAreaStartX + MouseAreaWidth &&
         y >= MouseAreaStartY && y <= MouseAreaStartY + MouseAreaHeight) {
@@ -244,8 +243,6 @@ mouseArea.on('click', ({ x, y }) => {
         });
     }
 });
-
-// === LOOP ===
 
 const setMotorState = (newState) => {
     this.state = newState;
@@ -274,6 +271,5 @@ function checkPopupStatus() {
 }
 
 drawMouseArea();
-
 setInterval(checkPopupStatus, 1000);
 setInterval(checkStatusMotor, 1000);
